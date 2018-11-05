@@ -102,8 +102,7 @@ def check_ftp_fingerprint(port):
 """ Getting list of open ports and checking for http and ftp servers """
 httpServerPorts = {}
 ftpServerPorts = {}
-target_ip = sys.argv[-1]
-ip = '10.0.23.15'
+ip = sys.argv[-1]
 for port in range(0,65536):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.settimeout(2)
