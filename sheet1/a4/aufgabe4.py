@@ -3,6 +3,7 @@ import socket
 import ssl
 import threading
 import time
+import sys
 
 """
     Algorithm Idea
@@ -89,6 +90,7 @@ class keepConnectionThread (threading.Thread):
         print('Closing thread {0}'.format(self.threadID))
 
 
+ip = sys.argv[-1]
 atomicCounter =  AtomicInteger()
 failuresCounter = 0
 threads = []
@@ -101,7 +103,7 @@ while failuresCounter < __max_failures__:
     # WRAP SOCKET
     wrappedSocket = ssl.wrap_socket(sock, ssl_version=ssl.PROTOCOL_TLSv1_2)
     try:
-        result = wrappedSocket.connect_ex(('10.0.23.14', 443))
+        result = wrappedSocket.connect_ex((ip, 443))
         # start thread to keep connection open
         thread = keepConnectionThread(threadID, wrappedSocket, atomicCounter)
         threadID += 1

