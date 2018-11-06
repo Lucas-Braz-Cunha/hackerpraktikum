@@ -121,6 +121,6 @@ for t in threads:
     t.stop()
     t.join()
 
-print('Number of spawned threads: {0}'.format(threadID))
+print('Number of spawned threads: {0}'.format(threadID-1))
 print('Total number of simultaneous connections: {0}'.format(atomicCounter.getMaxValue()))
 print ("Exiting benchmark")

@@ -17,4 +17,4 @@ All my exercises were written in python3.
 
 ### Aufgabe 4
   DDOS script to benchmark the number of SSL connections a server can handle
-  python aufgabe2.py 10.0.23.14
+  python aufgabe4.py 10.0.23.14

