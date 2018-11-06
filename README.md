@@ -9,6 +9,7 @@ Assignments for the practical course hackerpraktikum from FAU
   
 ### Aufgabe 3
   "Spoofing" to change the date of another computer in the LAN
+  pip install scapy
   
 ### Aufgabe 4
   DDOS script to benchmark the number of SSL connections a server can handle
