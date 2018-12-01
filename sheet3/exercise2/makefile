@@ -1,0 +1,19 @@
+CC=gcc
+CFLAGS=-Wall
+TEST_FOLDER=./test_program/
+TEST_PROGRAM=$(TEST_FOLDER)main.c
+TEST_OBJ=$(TEST_FOLDER)main.o
+SHAREDLIB_FOLDER=./sandbox/
+SHAREDLIB_PROGRAM=$(SHAREDLIB_FOLDER)sandbox.c
+
+all: $(TEST_FOLDER)test $(SHAREDLIB_FOLDER)libpreload.so
+
+$(SHAREDLIB_FOLDER)libpreload.so: $(SHAREDLIB_PROGRAM)
+	$(CC) -fPIC -shared  -o $(SHAREDLIB_FOLDER)libpreload.so $(SHAREDLIB_PROGRAM) -ldl
+
+
+$(TEST_FOLDER)test: $(TEST_OBJ)
+	$(CC) $(CFLAGS) -o $(TEST_FOLDER)test $(TEST_OBJ)
+
+$(TEST_OBJ): $(TEST_PROGRAM)
+	$(CC) -c -o $(TEST_OBJ) $(TEST_PROGRAM)

@@ -1,0 +1,2 @@
+/home/lucas/fau/hacker/sheet3/exercise2/test_program/blocked_file.txt
+/home/programs/test.a
