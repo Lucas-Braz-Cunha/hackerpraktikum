@@ -1,0 +1,21 @@
+diff -ruN orig/var/www/html/application/controller/card2card.php new/var/www/html/application/controller/card2card.php
+--- orig/var/www/html/application/controller/card2card.php	2018-11-19 23:25:19.591672529 +0100
++++ new/var/www/html/application/controller/card2card.php	2018-11-19 23:26:39.359798299 +0100
+@@ -209,7 +209,7 @@
+         {
+             if($_REQUEST['export'] === 'CSV')
+             {
+-                $transactions = $this->model->getAllTransactions($_REQUEST['id']);
++                $transactions = $this->model->getAllTransactions($_SESSION['userdata']['id']);
+
+                 $csvArray = array(
+                     array('id', 'From card', 'To card', 'Count', 'Date', 'Message' )
+@@ -250,7 +250,7 @@
+             elseif($_REQUEST['export'] === 'XML')
+             {
+
+-                $transactions = $this->model->getAllTransactions($_REQUEST['id']);
++                $transactions = $this->model->getAllTransactions($_SESSION['userdata']['id']);
+
+                 if($transactions)
+{

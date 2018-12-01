@@ -10,6 +10,7 @@
   Script that searches for HTTP and FTP servers in a servidor. It also tells the servidor version if it's known.  
   Example of run:  
   python aufgabe1.py 10.0.23.15
+  
 ### Aufgabe 2
   Exploit for the Heartbleed vulnerability.
   Example of run:  
