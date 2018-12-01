@@ -1,0 +1,8 @@
+100c100
+<     if (logfile != "" and os.access(logfile, os.W_OK)):
+---
+>     if (logfile != ""):
+121c121
+<     if (logfile != "" and fd != 0):
+---
+>     if (logfile != ""):
