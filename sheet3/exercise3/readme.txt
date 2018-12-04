@@ -19,3 +19,12 @@ Details: The program can only handle one command per line, more than one the beh
 ex:
 cd ..; ls
 won't work.
+
+
+To run the programs:
+
+sudo python2.7 /path/to/master.py
+
+or
+
+sudo python2.7 /path/to/slave.py
