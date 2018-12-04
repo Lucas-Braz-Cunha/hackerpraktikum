@@ -1,7 +1,7 @@
 KDIR := /lib/modules/$(shell uname -r)/build
 PWD := $(shell pwd)
 
-obj-m := rootkit.o
+obj-m := harmless_module.o
 
 all:
 	make -C $(KDIR) M=$(PWD) modules
