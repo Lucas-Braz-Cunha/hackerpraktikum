@@ -50,6 +50,8 @@ class ICMP:
         timeLeft = timeout
         # timeLeft = 30
         while True:
+            if timeLeft <= 0:
+                return -1
             startedSelect = time.time()
             whatReady = select.select([self.socket], [], [], timeLeft)
             howLongInSelect = (time.time() - startedSelect)
@@ -62,27 +64,22 @@ class ICMP:
             type, code, checksum, packetID, sequence = struct.unpack(
                 "bbHHh", icmpHeader)
             message = recPacket[28:]
-            # print "Package:"
-            # print recPacket
-            # print "Msg:" + repr(message)
             if("H4CK3D" in message and self.ID == 0):
-                print "Atualizando ID"
+                # print "Atualizando ID"
                 self.ID = packetID
-                print "First message"
+                self.dest = addr[0]
+                # print "First message"
                 # print repr(message)
                 return message
             else:
                 if packetID == self.ID:
-                    print "Package ID equal:"
+                    # print "Package ID equal:"
                     # print repr(message)
                     return message
                 else:
                     print "Id diferente"
                     return 0
             timeLeft = timeLeft - howLongInSelect
-            if timeLeft <= 0:
-                print "timeout"
-                return -1
 
     def close(self):
         self.socket.close()

