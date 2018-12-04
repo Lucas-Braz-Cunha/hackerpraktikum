@@ -27,8 +27,8 @@ How can a malicious program break out of the sandbox?
 
 --with-shared=no --with-static=yes
 
-2. pre-script that changes the LD_PRELOAD variable.(?)
+2. Set the owner of the files to root: https://security.stackexchange.com/questions/63599/is-there-any-way-to-block-ld-preload-and-ld-library-path-on-linux
 
-3. Write its own functions to execute the intented routine.(?)
+3. Write its own functions with syscall to skip the LD_PRELOAD sandbox
 
-// #define _GNU_SOURCE
+
